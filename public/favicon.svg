@@ -1,0 +1,43 @@
+<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="dnaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="hsl(255 100% 59%)" />
+      <stop offset="100%" stopColor="hsl(165 100% 62%)" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <path
+    d="M30 10 Q50 25 30 40 Q10 55 30 70 Q50 85 30 95"
+    stroke="url(#dnaGradient)"
+    strokeWidth="4"
+    strokeLinecap="round"
+    fill="none"
+    filter="url(#glow)"
+  />
+  
+  <path
+    d="M70 10 Q50 25 70 40 Q90 55 70 70 Q50 85 70 95"
+    stroke="url(#dnaGradient)"
+    strokeWidth="4"
+    strokeLinecap="round"
+    fill="none"
+    filter="url(#glow)"
+  />
+  
+  <line x1="35" y1="18" x2="65" y2="18" stroke="hsl(255 100% 59%)" strokeWidth="2" opacity="0.6" />
+  <line x1="25" y1="40" x2="75" y2="40" stroke="hsl(165 100% 62%)" strokeWidth="2" opacity="0.8" />
+  <line x1="35" y1="62" x2="65" y2="62" stroke="hsl(255 100% 59%)" strokeWidth="2" opacity="0.6" />
+  <line x1="25" y1="84" x2="75" y2="84" stroke="hsl(165 100% 62%)" strokeWidth="2" opacity="0.8" />
+  
+  <circle cx="30" cy="40" r="4" fill="hsl(165 100% 62%)" />
+  <circle cx="70" cy="40" r="4" fill="hsl(255 100% 59%)" />
+  <circle cx="30" cy="70" r="4" fill="hsl(255 100% 59%)" />
+  <circle cx="70" cy="70" r="4" fill="hsl(165 100% 62%)" />
+</svg>

@@ -1,0 +1,177 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Bioinformatics Unfiltered Design System
+   Primary: Deep Royal Purple (#5B2EFF)
+   Accent: Teal (#3FFFD6)
+   Background: Near-black indigo (#0B0E1A)
+   Dark mode only
+*/
+
+@layer base {
+  :root {
+    /* Force dark mode colors as the only mode */
+    --background: 230 50% 7%;
+    --foreground: 260 30% 92%;
+
+    --card: 230 45% 10%;
+    --card-foreground: 260 30% 92%;
+
+    --popover: 230 45% 10%;
+    --popover-foreground: 260 30% 92%;
+
+    --primary: 255 100% 59%;
+    --primary-foreground: 260 30% 98%;
+
+    --secondary: 230 40% 15%;
+    --secondary-foreground: 260 30% 92%;
+
+    --muted: 230 30% 18%;
+    --muted-foreground: 260 20% 65%;
+
+    --accent: 165 100% 62%;
+    --accent-foreground: 230 50% 7%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 260 30% 98%;
+
+    --border: 230 30% 20%;
+    --input: 230 30% 18%;
+    --ring: 255 100% 59%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 230 45% 8%;
+    --sidebar-foreground: 260 30% 92%;
+    --sidebar-primary: 255 100% 59%;
+    --sidebar-primary-foreground: 260 30% 98%;
+    --sidebar-accent: 230 40% 15%;
+    --sidebar-accent-foreground: 260 30% 92%;
+    --sidebar-border: 230 30% 20%;
+    --sidebar-ring: 255 100% 59%;
+  }
+
+  /* Dark class mirrors root - single theme */
+  .dark {
+    --background: 230 50% 7%;
+    --foreground: 260 30% 92%;
+
+    --card: 230 45% 10%;
+    --card-foreground: 260 30% 92%;
+
+    --popover: 230 45% 10%;
+    --popover-foreground: 260 30% 92%;
+
+    --primary: 255 100% 59%;
+    --primary-foreground: 260 30% 98%;
+
+    --secondary: 230 40% 15%;
+    --secondary-foreground: 260 30% 92%;
+
+    --muted: 230 30% 18%;
+    --muted-foreground: 260 20% 65%;
+
+    --accent: 165 100% 62%;
+    --accent-foreground: 230 50% 7%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 260 30% 98%;
+
+    --border: 230 30% 20%;
+    --input: 230 30% 18%;
+    --ring: 255 100% 59%;
+
+    --sidebar-background: 230 45% 8%;
+    --sidebar-foreground: 260 30% 92%;
+    --sidebar-primary: 255 100% 59%;
+    --sidebar-primary-foreground: 260 30% 98%;
+    --sidebar-accent: 230 40% 15%;
+    --sidebar-accent-foreground: 260 30% 92%;
+    --sidebar-border: 230 30% 20%;
+    --sidebar-ring: 255 100% 59%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+/* Custom utility classes */
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary background-animate;
+  }
+
+  .background-animate {
+    background-size: 200%;
+    animation: shine 3s linear infinite;
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 20px hsl(255 100% 59% / 0.3);
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 20px hsl(165 100% 62% / 0.3);
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shine {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
