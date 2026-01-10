@@ -3,12 +3,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, MapPin, ArrowRight } from "lucide-react";
-import { events } from '@/data/events';
+// import { events } from '@/data/events';
+import { useCollection } from '@/hooks/useCollection';
+import { Event } from '@/data/events'; // Interface
 import { DNALogo } from './DNALogo';
 
 export function EventsSection() {
+    const { data: events, loading } = useCollection<Event>('events');
     const upcomingEvents = events.filter(e => e.status === 'upcoming');
     const pastEvents = events.filter(e => e.status === 'past');
+
+    if (loading) return <div className="py-20 text-center">Loading events...</div>;
 
     return (
         <section id="events" className="py-20 px-4 bg-background">

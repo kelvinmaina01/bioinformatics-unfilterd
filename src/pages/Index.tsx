@@ -30,11 +30,14 @@ const differentiators = [
   { title: 'Kenya-Wide Network', description: 'Connecting universities across the nation' }
 ];
 
+import { DonationBanner } from '@/components/DonationBanner';
+
 export default function Index() {
   const [joinOpen, setJoinOpen] = useState(false);
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
+      <DonationBanner />
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4">

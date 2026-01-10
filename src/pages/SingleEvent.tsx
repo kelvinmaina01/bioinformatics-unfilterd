@@ -6,13 +6,38 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar, MapPin, Share2, Mail, Linkedin, Twitter, Users } from "lucide-react";
-import { events } from '@/data/events';
+// import { events } from '@/data/events';
+import { Event } from '@/data/events';
 import { teamMembers } from '@/data/team';
 import { CommunityConnect } from '@/components/CommunityConnect';
+import { useState, useEffect } from 'react';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 export default function SingleEvent() {
     const { id } = useParams();
-    const event = events.find(e => e.id === id);
+    const [event, setEvent] = useState<Event | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchEvent() {
+            if (!id) return;
+            try {
+                const docRef = doc(db, 'events', id);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    setEvent({ id: docSnap.id, ...docSnap.data() } as Event);
+                }
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchEvent();
+    }, [id]);
+
+    if (loading) return <div className="min-h-screen pt-32 text-center">Loading...</div>;
 
     if (!event) {
         return (

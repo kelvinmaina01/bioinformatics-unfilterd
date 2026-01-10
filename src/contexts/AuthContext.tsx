@@ -1,7 +1,18 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { auth, db } from '@/lib/firebase';
+import {
+  signInWithPopup,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signOut,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  User
+} from 'firebase/auth';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 export interface UserProfile {
-  id: string;
+  id: string; // Firebase UID
   name: string;
   email: string;
   avatar: string;
@@ -13,62 +24,132 @@ export interface UserProfile {
   joinedAt: string;
   discord?: string;
   twitter?: string;
-  github?: string;
+  github?: string; // used for LinkedIn in current form
   role?: string;
   institution?: string;
 }
 
 interface AuthContextType {
   user: UserProfile | null;
+  loading: boolean;
   isAuthenticated: boolean;
-  login: (profile: Omit<UserProfile, 'id' | 'joinedAt'>) => void;
-  logout: () => void;
-  updateProfile: (updates: Partial<UserProfile>) => void;
+  isAdmin: boolean;
+  loginWithGoogle: () => Promise<void>;
+  loginWithApple: () => Promise<void>;
+  loginWithEmail: (email: string, pass: string) => Promise<void>;
+  registerWithEmail: (email: string, pass: string, name: string) => Promise<void>;
+  logout: () => Promise<void>;
+  updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'biounfiltered_user';
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      try {
-        setUser(JSON.parse(stored));
-      } catch {
-        localStorage.removeItem(STORAGE_KEY);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        // User is signed in, fetch profile from Firestore
+        const userDocRef = doc(db, 'users', firebaseUser.uid);
+        const userSnapshot = await getDoc(userDocRef);
+
+        if (userSnapshot.exists()) {
+          setUser(userSnapshot.data() as UserProfile);
+        } else {
+          // New user (or profile doesn't exist yet)
+          // Create a basic profile in state, but don't save to DB until they complete the form
+          // OR save a basic one now. Let's save a basic one now to ensure consistency
+          const basicProfile: UserProfile = {
+            id: firebaseUser.uid,
+            name: firebaseUser.displayName || 'Anonymous',
+            email: firebaseUser.email || '',
+            avatar: firebaseUser.photoURL || '',
+            bio: '',
+            skills: [],
+            interests: [],
+            region: 'Unknown',
+            regionFlag: '🌍',
+            joinedAt: new Date().toISOString(),
+          };
+
+          await setDoc(userDocRef, basicProfile);
+          setUser(basicProfile);
+        }
+      } else {
+        setUser(null);
       }
-    }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  const login = (profile: Omit<UserProfile, 'id' | 'joinedAt'>) => {
-    const newUser: UserProfile = {
-      ...profile,
-      id: crypto.randomUUID(),
+  const loginWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
+  };
+
+  const loginWithApple = async () => {
+    const provider = new OAuthProvider('apple.com');
+    await signInWithPopup(auth, provider);
+  };
+
+  const loginWithEmail = async (email: string, pass: string) => {
+    await signInWithEmailAndPassword(auth, email, pass);
+  };
+
+  const registerWithEmail = async (email: string, pass: string, name: string) => {
+    const res = await createUserWithEmailAndPassword(auth, email, pass);
+    // Create initial profile
+    const userDocRef = doc(db, 'users', res.user.uid);
+    const basicProfile: UserProfile = {
+      id: res.user.uid,
+      name: name || 'Member',
+      email: email,
+      avatar: '',
+      bio: '',
+      skills: [],
+      interests: [],
+      region: 'Unknown',
+      regionFlag: '🌍',
       joinedAt: new Date().toISOString(),
     };
-    setUser(newUser);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newUser));
+    await setDoc(userDocRef, basicProfile);
+    setUser(basicProfile);
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await signOut(auth);
     setUser(null);
-    localStorage.removeItem(STORAGE_KEY);
   };
 
-  const updateProfile = (updates: Partial<UserProfile>) => {
-    if (!user) return;
-    const updated = { ...user, ...updates };
-    setUser(updated);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+  const updateProfile = async (updates: Partial<UserProfile>) => {
+    if (!auth.currentUser) return;
+
+    // Optimistic update
+    setUser((prev) => prev ? { ...prev, ...updates } : null);
+
+    // Update in Firestore
+    const userDocRef = doc(db, 'users', auth.currentUser.uid);
+    await updateDoc(userDocRef, updates);
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout, updateProfile }}>
-      {children}
+    <AuthContext.Provider value={{
+      user,
+      loading,
+      isAuthenticated: !!user,
+      isAdmin: user?.role === 'admin',
+      loginWithGoogle,
+      loginWithApple,
+      loginWithEmail,
+      registerWithEmail,
+      logout,
+      updateProfile
+    }}>
+      {!loading && children}
     </AuthContext.Provider>
   );
 }

@@ -8,114 +8,43 @@ import { Button } from '@/components/ui/button';
 import { Search, Trophy, Medal, Linkedin, Twitter, MapPin, GraduationCap } from 'lucide-react';
 
 interface Member {
-  id: string;
+  id: string; // Firebase UID
   name: string;
-  initials: string;
-  flag: string;
+  avatar: string; // URL
   role: string;
   skills: string[];
-  interests: string;
-  contributionScore: number;
-  socials: {
-    linkedin?: string;
-    twitter?: string;
-  };
-  rank?: number;
+  interests: string[]; // Changed from string to string[] in AuthContext, adapting here
+  regionFlag?: string; // Optional if not present
+  twitter?: string;
+  github?: string;
+  linkedin?: string;
+  bio?: string;
+  // Computed for display
+  initials?: string;
+  contributionScore?: number;
 }
 
-const members: Member[] = [
-  {
-    id: '1',
-    name: 'Brian Kimani',
-    initials: 'BK',
-    flag: '🇰🇪',
-    role: 'Biomedical Science',
-    skills: ['Python', 'Data Analysis'],
-    interests: 'Infectious diseases • Public health',
-    contributionScore: 1250,
-    socials: { twitter: '#' }
-  },
-  {
-    id: '2',
-    name: 'Faith Wanjiku',
-    initials: 'FW',
-    flag: '🇰🇪',
-    role: 'Medical Lab Sciences',
-    skills: ['R', 'Statistics'],
-    interests: 'Clinical diagnostics • Hematology',
-    contributionScore: 980,
-    socials: { linkedin: '#' }
-  },
-  {
-    id: '3',
-    name: 'Kevin Ochieng',
-    initials: 'KO',
-    flag: '🇰🇪',
-    role: 'Biotechnology',
-    skills: ['Bioinformatics', 'Linux'],
-    interests: 'Genomics • Agricultural biotech',
-    contributionScore: 890,
-    socials: { twitter: '#', linkedin: '#' }
-  },
-  {
-    id: '4',
-    name: 'Dr. Amina Hassan',
-    initials: 'AH',
-    flag: '🇰🇪',
-    role: 'Public Health',
-    skills: ['Epidemiology', 'SPSS'],
-    interests: 'Disease surveillance • Health policy',
-    contributionScore: 850,
-    socials: { linkedin: '#' }
-  },
-  {
-    id: '5',
-    name: 'Peter Mutua',
-    initials: 'PM',
-    flag: '🇰🇪',
-    role: 'Biochemistry',
-    skills: ['Lab Techniques', 'Research'],
-    interests: 'Drug development • Molecular biology',
-    contributionScore: 720,
-    socials: {}
-  },
-  {
-    id: '6',
-    name: 'Grace Akinyi',
-    initials: 'GA',
-    flag: '🇰🇪',
-    role: 'Nursing',
-    skills: ['Community Health', 'Data Collection'],
-    interests: 'Maternal health • Rural healthcare',
-    contributionScore: 640,
-    socials: {}
-  },
-  {
-    id: '7',
-    name: 'Samuel Kariuki',
-    initials: 'SK',
-    flag: '🇰🇪',
-    role: 'Biomedical Engineering',
-    skills: ['MATLAB', 'CAD'],
-    interests: 'Medical devices • Prosthetics',
-    contributionScore: 590,
-    socials: { twitter: '#' }
-  },
-  {
-    id: '8',
-    name: 'Mary Njeri',
-    initials: 'MN',
-    flag: '🇰🇪',
-    role: 'Pharmacy',
-    skills: ['Pharmacology', 'Clinical Trials'],
-    interests: 'Drug interactions • Pharmaceutical research',
-    contributionScore: 430,
-    socials: { linkedin: '#' }
-  }
-].sort((a, b) => b.contributionScore - a.contributionScore);
+// Local mock members removed. Now fetching from Firebase.
+import { useCollection } from '@/hooks/useCollection';
 
 export default function Community() {
   const [search, setSearch] = useState('');
+  const { data: users, loading } = useCollection<Member>('users');
+
+  // Map Firestore users to display format
+  const members = users.map(u => ({
+    ...u,
+    initials: u.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase(),
+    // Default values if missing
+    flag: u.regionFlag || '🇰🇪',
+    contributionScore: Math.floor(Math.random() * 1000), // Mock score for now as it's not in DB yet
+    socials: {
+      twitter: u.twitter,
+      linkedin: u.linkedin || u.github // fallback
+    },
+    // Interests is string[] in DB but UI expects string. Join it.
+    interests: Array.isArray(u.interests) ? u.interests.join(' • ') : u.interests || ''
+  })).sort((a, b) => (b.contributionScore || 0) - (a.contributionScore || 0));
 
   const filteredMembers = members.filter(m =>
     m.name.toLowerCase().includes(search.toLowerCase()) ||

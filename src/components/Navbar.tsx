@@ -6,6 +6,7 @@ import { Button } from './ui/button';
 import { SocialIcons } from './SocialIcons';
 import { JoinModal } from './JoinModal';
 import { ProfileModal } from './ProfileModal';
+import { ThemeToggle } from './ThemeToggle';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 
@@ -55,6 +56,7 @@ export function Navbar() {
             </div>
 
             <div className="hidden md:flex items-center gap-4">
+              <ThemeToggle />
               <SocialIcons size="sm" />
               {isAuthenticated ? (
                 <button
@@ -95,7 +97,10 @@ export function Navbar() {
                 </Link>
               ))}
               <div className="pt-4 border-t border-border mt-2">
-                <SocialIcons size="md" className="justify-center mb-4" />
+                <div className="flex justify-center mb-4 gap-4">
+                  <ThemeToggle />
+                  <SocialIcons size="md" />
+                </div>
                 {isAuthenticated ? (
                   <Button onClick={() => { setProfileOpen(true); setIsOpen(false); }} className="w-full">
                     My Profile

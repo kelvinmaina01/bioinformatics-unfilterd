@@ -3,7 +3,9 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { ProjectCard } from '@/components/ProjectCard';
 import { Badge } from '@/components/ui/badge';
-import { projects } from '@/data/mockData';
+// import { projects } from '@/data/mockData';
+import { useCollection } from '@/hooks/useCollection';
+import { Project } from '@/data/mockData'; // Import interface only
 import { cn } from '@/lib/utils';
 
 const fields = ['All', 'Genomics', 'AI/ML', 'Ethics', 'Single-cell', 'Drug Discovery'];
@@ -12,6 +14,8 @@ const statuses = ['All', 'Active', 'Completed', 'Planning'];
 export default function Projects() {
   const [fieldFilter, setFieldFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState('All');
+
+  const { data: projects, loading } = useCollection<Project>('projects');
 
   const filteredProjects = projects.filter(p => {
     const matchesField = fieldFilter === 'All' || p.field === fieldFilter;
@@ -22,7 +26,7 @@ export default function Projects() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      
+
       <main className="pt-24 pb-20 px-4">
         <div className="container mx-auto">
           {/* Header */}
@@ -31,7 +35,7 @@ export default function Projects() {
               Community Projects
             </h1>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              Open-source tools, databases, and frameworks built by the community, 
+              Open-source tools, databases, and frameworks built by the community,
               for the community. Real work that moves the field forward.
             </p>
           </div>
@@ -80,7 +84,7 @@ export default function Projects() {
           {/* Projects Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProjects.map((project, index) => (
-              <div 
+              <div
                 key={project.id}
                 className="animate-fade-in-up"
                 style={{ animationDelay: `${index * 50}ms` }}

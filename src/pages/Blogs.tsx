@@ -219,8 +219,8 @@ export default function Blogs() {
                       {post.tags[0] || 'Story'}
                     </Badge>
                   </div>
-                  <div className="absolute top-4 right-4 bg-black/50 backdrop-blur p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                    <ArrowRight className="w-4 h-4 text-white -rotate-45" />
+                  <div className="absolute top-4 right-4 bg-background/80 backdrop-blur p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                    <ArrowRight className="w-4 h-4 text-foreground -rotate-45" />
                   </div>
                 </div>
 
