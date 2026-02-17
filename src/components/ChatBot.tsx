@@ -33,13 +33,29 @@ export function ChatBot() {
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-                <Button
-                    variant="default"
-                    size="icon"
-                    className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-2xl bg-primary hover:bg-primary/90 z-50 transition-all hover:scale-110 border-4 border-background animate-in fade-in slide-in-from-bottom-4 duration-500"
-                >
-                    <MessageCircle className="h-7 w-7" />
-                </Button>
+                <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 cursor-pointer group">
+                    {/* Welcoming Bubble */}
+                    <div className="bg-background border border-border px-4 py-2 rounded-2xl shadow-xl animate-in fade-in slide-in-from-right-4 duration-700 delay-500 hidden md:block group-hover:scale-105 transition-transform">
+                        <p className="text-sm font-medium text-foreground italic whitespace-nowrap">
+                            "Are you stuck? How can I help u?"
+                        </p>
+                    </div>
+
+                    <Button
+                        variant="default"
+                        size="icon"
+                        className="h-16 w-16 rounded-full shadow-2xl bg-primary hover:bg-primary/90 transition-all hover:scale-110 border-4 border-background overflow-hidden relative"
+                    >
+                        <Avatar className="h-full w-full rounded-none">
+                            <AvatarImage src="/assets/kelvin_bot.png" alt="Kelvin" className="object-cover" />
+                            <AvatarFallback className="bg-primary text-primary-foreground font-bold text-xl">
+                                <MessageCircle className="h-8 w-8 text-white" />
+                            </AvatarFallback>
+                        </Avatar>
+                        {/* Ping Animation */}
+                        <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-green-500 border-2 border-background animate-pulse" />
+                    </Button>
+                </div>
             </SheetTrigger>
             <SheetContent
                 side="right"
