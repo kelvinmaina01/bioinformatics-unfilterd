@@ -14,7 +14,7 @@ export function CommunityConnect() {
             label: "WhatsApp Community",
             desc: "Join the Family",
             icon: MessageCircle, // Using MessageCircle for consistency as requested
-            href: "#",
+            href: "https://chat.whatsapp.com/JCFjFwdRUkKD7tFtu1ktzC",
             className: "bg-[#128C7E] hover:bg-[#075e54] text-white border-transparent shadow-[#128C7E]/50"
         },
         {
