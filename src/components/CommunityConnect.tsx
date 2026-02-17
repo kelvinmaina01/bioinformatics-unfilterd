@@ -38,27 +38,6 @@ export function CommunityConnect() {
             href: "mailto:bioinformaticsunfiltered@gmail.com",
             className: "bg-[#EA4335] hover:bg-[#d93025] text-white border-transparent shadow-[#EA4335]/50"
         },
-        {
-            label: "Calendly",
-            desc: "Book a meeting",
-            icon: Calendar,
-            href: "#",
-            className: "bg-[#006BFF] hover:bg-[#0050c0] text-white border-transparent shadow-[#006BFF]/50"
-        },
-        {
-            label: "X (Twitter)",
-            desc: "Follow Updates",
-            icon: Twitter,
-            href: "#",
-            className: "bg-black hover:bg-black/80 text-white border-transparent shadow-black/50"
-        },
-        {
-            label: "Discord",
-            desc: "Chat Live",
-            icon: Gamepad2,
-            href: "https://discord.gg/xtnPrCyE",
-            className: "bg-[#5865F2] hover:bg-[#4752c4] text-white border-transparent shadow-[#5865F2]/50"
-        }
     ];
 
     return (
