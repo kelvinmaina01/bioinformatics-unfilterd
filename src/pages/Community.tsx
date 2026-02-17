@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Search, Trophy, Medal, Linkedin, Twitter, MapPin, GraduationCap } from 'lucide-react';
+import { Search, Trophy, Medal, Linkedin, Twitter, MapPin, GraduationCap, Calendar, MessageCircle } from 'lucide-react';
 
 interface Member {
   id: string; // Firebase UID
@@ -69,9 +69,40 @@ export default function Community() {
             <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 tracking-tight">
               Community <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Directory</span>
             </h1>
-            <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+            <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
               Researchers, students, and builders from universities across Kenya. United by curiosity and a commitment to open science.
             </p>
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap justify-center gap-4 mb-2 animate-fade-in delay-200">
+              <Button asChild variant="outline" className="h-12 px-6 border-primary/20 hover:border-primary hover:bg-primary/5 gap-2 transition-all hover:scale-105">
+                <a href="https://calendly.com/bioinformaticsunfiltered" target="_blank" rel="noreferrer">
+                  <Calendar className="w-4 h-4 text-primary" />
+                  <div className="text-left">
+                    <div className="text-[10px] uppercase tracking-wider opacity-50 leading-none">Calendly</div>
+                    <div className="text-sm font-bold">Book a meeting</div>
+                  </div>
+                </a>
+              </Button>
+              <Button asChild variant="outline" className="h-12 px-6 border-sky-400/20 hover:border-sky-400 hover:bg-sky-400/5 gap-2 transition-all hover:scale-105">
+                <a href="https://twitter.com/biounfiltered" target="_blank" rel="noreferrer">
+                  <Twitter className="w-4 h-4 text-sky-400" />
+                  <div className="text-left">
+                    <div className="text-[10px] uppercase tracking-wider opacity-50 leading-none">X (Twitter)</div>
+                    <div className="text-sm font-bold">Follow Updates</div>
+                  </div>
+                </a>
+              </Button>
+              <Button asChild variant="outline" className="h-12 px-6 border-[#5865F2]/20 hover:border-[#5865F2] hover:bg-[#5865F2]/5 gap-2 transition-all hover:scale-105">
+                <a href="https://discord.gg/xtnPrCyE" target="_blank" rel="noreferrer">
+                  <MessageCircle className="w-4 h-4 text-[#5865F2]" />
+                  <div className="text-left">
+                    <div className="text-[10px] uppercase tracking-wider opacity-50 leading-none">Discord</div>
+                    <div className="text-sm font-bold">Chat Live</div>
+                  </div>
+                </a>
+              </Button>
+            </div>
           </div>
 
           {/* Search */}
