@@ -106,17 +106,6 @@ export default function Index() {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row items-center gap-6">
-              <div className="bg-white p-3 rounded-2xl shadow-xl transition-transform hover:scale-105 group/qr relative">
-                <div className="absolute inset-0 bg-primary/20 blur-xl opacity-0 group-hover/qr:opacity-100 transition-opacity rounded-2xl" />
-                <img
-                  src="/assets/discord_qr.png"
-                  alt="Discord QR Code"
-                  className="w-32 h-32 rounded-lg relative z-10"
-                />
-                <div className="absolute -bottom-2 -right-2 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-lg z-20">
-                  SCAN ME
-                </div>
-              </div>
               <a href="https://discord.gg/xtnPrCyE" target="_blank" rel="noreferrer">
                 <Button size="lg" className="bg-white text-[#5865F2] hover:bg-white/90 text-lg px-8 py-6 h-auto font-bold shadow-lg transition-all hover:scale-105">
                   Join Discord Server

@@ -39,8 +39,17 @@ export function Footer() {
             </Link>
           </div>
 
-          <div className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} Bioinformatics Unfiltered Kenya
+          <div className="flex flex-col items-center md:items-end gap-3">
+            <div className="bg-white p-2 rounded-xl shadow-lg transform hover:scale-110 transition-transform">
+              <img
+                src="/assets/discord_qr.png"
+                alt="Discord QR"
+                className="w-16 h-16 rounded-md"
+              />
+            </div>
+            <div className="text-xs text-muted-foreground">
+              © {new Date().getFullYear()} Bioinformatics Unfiltered Kenya
+            </div>
           </div>
         </div>
       </div>
