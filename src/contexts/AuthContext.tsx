@@ -35,7 +35,6 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isAdmin: boolean;
   loginWithGoogle: () => Promise<void>;
-  loginWithApple: () => Promise<void>;
   loginWithEmail: (email: string, pass: string) => Promise<void>;
   registerWithEmail: (email: string, pass: string, name: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -91,10 +90,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await signInWithPopup(auth, provider);
   };
 
-  const loginWithApple = async () => {
-    const provider = new OAuthProvider('apple.com');
-    await signInWithPopup(auth, provider);
-  };
+
 
   const loginWithEmail = async (email: string, pass: string) => {
     await signInWithEmailAndPassword(auth, email, pass);
@@ -143,7 +139,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isAuthenticated: !!user,
       isAdmin: user?.role === 'admin',
       loginWithGoogle,
-      loginWithApple,
       loginWithEmail,
       registerWithEmail,
       logout,

@@ -7,7 +7,7 @@ export function CommunityConnect() {
             label: "WhatsApp Channel",
             desc: "Stay Updated",
             icon: MessageCircle,
-            href: "#",
+            href: "https://whatsapp.com/channel/0029Vb6eutq7j6g1OqojYB30",
             className: "bg-[#25D366] hover:bg-[#20bd5a] text-white border-transparent shadow-[#25D366]/50"
         },
         {
