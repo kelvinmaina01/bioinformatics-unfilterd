@@ -106,7 +106,7 @@ export default function Index() {
               </p>
             </div>
             <div className="flex-shrink-0">
-              <a href="https://discord.gg" target="_blank" rel="noreferrer">
+              <a href="https://discord.gg/xtnPrCyE" target="_blank" rel="noreferrer">
                 <Button size="lg" className="bg-white text-[#5865F2] hover:bg-white/90 text-lg px-8 py-6 h-auto font-bold shadow-lg transition-all hover:scale-105">
                   Join Discord Server
                 </Button>

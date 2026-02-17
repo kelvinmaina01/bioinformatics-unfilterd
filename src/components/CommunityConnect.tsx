@@ -56,7 +56,7 @@ export function CommunityConnect() {
             label: "Discord",
             desc: "Chat Live",
             icon: Gamepad2,
-            href: "https://discord.gg",
+            href: "https://discord.gg/xtnPrCyE",
             className: "bg-[#5865F2] hover:bg-[#4752c4] text-white border-transparent shadow-[#5865F2]/50"
         }
     ];
