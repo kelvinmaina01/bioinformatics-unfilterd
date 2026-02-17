@@ -14,13 +14,15 @@ export default function AdminDashboardLayout() {
                 <div className="flex flex-col md:flex-row gap-8">
                     {/* Sidebar */}
                     <aside className="w-full md:w-64 space-y-2">
-                        <h2 className="text-xl font-bold mb-6 px-4">Admin Panel</h2>
+                        <h2 className="text-xl font-bold mb-6 px-4">Bioinformatics Unfiltered Cockpit</h2>
 
                         <SidebarLink to="/admin" icon={<LayoutDashboard />}>Overview</SidebarLink>
+                        <SidebarLink to="/admin/community" icon={<Users />}>Community</SidebarLink>
                         <SidebarLink to="/admin/events" icon={<Calendar />}>Events</SidebarLink>
-                        <SidebarLink to="/admin/blogs" icon={<FileText />}>Blogs</SidebarLink>
+                        <SidebarLink to="/admin/team" icon={<Users />}>Leadership Team</SidebarLink>
+                        <SidebarLink to="/admin/honour-circle" icon={<Users />}>Honour Circle</SidebarLink>
                         <SidebarLink to="/admin/donations" icon={<DollarSign />}>Donations</SidebarLink>
-                        <SidebarLink to="/admin/team" icon={<Users />}>Team</SidebarLink>
+                        <SidebarLink to="/admin/blogs" icon={<FileText />}>Blogs</SidebarLink>
                         <SidebarLink to="/admin/settings" icon={<Settings />}>Settings</SidebarLink>
                     </aside>
 

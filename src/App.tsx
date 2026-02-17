@@ -24,49 +24,55 @@ import About from "./pages/About";
 import SingleEvent from "./pages/SingleEvent";
 import Blogs from "./pages/Blogs";
 import NotFound from "./pages/NotFound";
+import UsersList from "./pages/admin/UsersList";
+import TeamManager from "./pages/admin/TeamManager";
+import HonourCircle from "./pages/admin/HonourCircle";
+import { ChatBot } from "./components/ChatBot";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme"> {/* Default theme set to dark */}
         <AuthProvider>
           <DatabaseSeeder />
-          <TooltipProvider>
-            <CompleteProfileModal />
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/community" element={<Community />} />
-                <Route path="/projects" element={<Projects />} />
-                <Route path="/resources" element={<Resources />} />
-                <Route path="/papers" element={<Papers />} />
-                <Route path="/blogs" element={<Blogs />} />
-                <Route path="/events/:id" element={<SingleEvent />} />
-                <Route path="/about" element={<About />} />
+          <BrowserRouter>
+            <ScrollToTop />
+            <Routes>
+              {/* Main Application Routes */}
+              <Route path="/" element={<Index />} />
+              <Route path="/community" element={<Community />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/resources" element={<Resources />} />
+              <Route path="/papers" element={<Papers />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/blogs" element={<Blogs />} />
+              <Route path="/events/:id" element={<SingleEvent />} />
 
-                {/* Admin Routes */}
-                <Route path="/admin" element={
-                  <AdminRoute>
-                    <AdminDashboardLayout />
-                  </AdminRoute>
-                }>
-                  <Route index element={<AdminOverview />} />
-                  <Route path="events" element={<EventController />} />
-                  <Route path="blogs" element={<BlogController />} />
-                  <Route path="donations" element={<AdminDonations />} />
-                  <Route path="team" element={<div>Team Manager (Coming Soon)</div>} />
-                  <Route path="settings" element={<div>Settings (Coming Soon)</div>} />
-                </Route>
+              {/* Admin Dashboard Routes (Cockpit) */}
+              <Route path="/admin" element={
+                <AdminRoute>
+                  <AdminDashboardLayout />
+                </AdminRoute>
+              }>
+                <Route index element={<AdminOverview />} />
+                <Route path="community" element={<UsersList />} />
+                <Route path="events" element={<EventController />} />
+                <Route path="blogs" element={<BlogController />} />
+                <Route path="donations" element={<AdminDonations />} />
+                <Route path="team" element={<TeamManager />} />
+                <Route path="honour-circle" element={<HonourCircle />} />
+                <Route path="settings" element={<div>Settings (Coming Soon)</div>} />
+              </Route>
 
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-              <ScrollToTop />
-            </BrowserRouter>
-          </TooltipProvider>
+              {/* 404 Route */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <ChatBot />
+          </BrowserRouter>
+          <Toaster />
+          <CompleteProfileModal />
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
@@ -74,4 +80,3 @@ const App = () => (
 );
 
 export default App;
-

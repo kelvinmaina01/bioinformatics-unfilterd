@@ -35,7 +35,7 @@ export function CommunityConnect() {
             label: "Gmail",
             desc: "Send us an email",
             icon: Mail,
-            href: "mailto:hello@bioinformaticshub.ke",
+            href: "mailto:bioinformaticsunfiltered@gmail.com",
             className: "bg-[#EA4335] hover:bg-[#d93025] text-white border-transparent shadow-[#EA4335]/50"
         },
         {

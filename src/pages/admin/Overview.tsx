@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export default function AdminOverview() {
     return (
         <div className="space-y-6">
-            <h1 className="text-3xl font-bold">Dashboard Overview</h1>
+            <h1 className="text-3xl font-bold">Cockpit Overview</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <StatCard title="Total Users" value="1,234" />
