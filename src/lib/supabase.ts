@@ -16,6 +16,9 @@ console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY:', import.meta.env.NEXT_PUBLIC_SUPABA
 console.log('Using supabaseAnonKey present?:', !!supabaseAnonKey)
 console.log('Key type:', supabaseAnonKey ? (supabaseAnonKey.startsWith('sb_publishable_') ? 'publishable' : supabaseAnonKey.startsWith('eyJ') ? 'JWT' : 'unknown') : 'none')
 
+// Create supabase client based on configuration
+let supabaseClient
+
 // Validate that we have the required environment variables
 if (!supabaseAnonKey || supabaseAnonKey === 'your-anon-key-here' || supabaseAnonKey.includes('your-anon-key')) {
   console.error(
@@ -30,7 +33,7 @@ if (!supabaseAnonKey || supabaseAnonKey === 'your-anon-key-here' || supabaseAnon
   
   // Create a mock client that will throw helpful errors
   // This prevents the app from crashing during development
-  export const supabase = {
+  supabaseClient = {
     auth: {
       signIn: () => Promise.reject(new Error('Supabase not configured. Please set VITE_SUPABASE_ANON_KEY in environment variables')),
       signOut: () => Promise.reject(new Error('Supabase not configured. Please set VITE_SUPABASE_ANON_KEY in environment variables')),
@@ -46,7 +49,7 @@ if (!supabaseAnonKey || supabaseAnonKey === 'your-anon-key-here' || supabaseAnon
 } else {
   try {
     // Create the actual Supabase client
-    export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
         autoRefreshToken: true,
         persistSession: true,
@@ -58,7 +61,7 @@ if (!supabaseAnonKey || supabaseAnonKey === 'your-anon-key-here' || supabaseAnon
     console.log('Key type:', supabaseAnonKey.startsWith('sb_publishable_') ? 'publishable key' : 'JWT key')
     
     // Test the connection
-    supabase.auth.getSession().then(({ data, error }) => {
+    supabaseClient.auth.getSession().then(({ data, error }) => {
       if (error) {
         console.error('❌ Supabase connection test failed:', error.message)
       } else {
@@ -70,7 +73,7 @@ if (!supabaseAnonKey || supabaseAnonKey === 'your-anon-key-here' || supabaseAnon
     console.error('This might be a key format issue or network issue.')
     
     // Fallback to mock client
-    export const supabase = {
+    supabaseClient = {
       auth: {
         signIn: () => Promise.reject(new Error(`Supabase client creation failed: ${error}`)),
         signOut: () => Promise.reject(new Error(`Supabase client creation failed: ${error}`)),
@@ -85,3 +88,6 @@ if (!supabaseAnonKey || supabaseAnonKey === 'your-anon-key-here' || supabaseAnon
     } as any
   }
 }
+
+// Export the supabase client
+export const supabase = supabaseClient
