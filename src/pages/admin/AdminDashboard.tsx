@@ -3,18 +3,15 @@ import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableCell, Table as UITable } from '@/components/ui/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { 
   Users, 
   Calendar, 
   FileText, 
-  MessageSquare, 
-  Users as UsersIcon, 
-  BarChart3,
+  Users as UsersIcon,
   ExternalLink,
   Edit,
-  Trash2,
   Eye
 } from 'lucide-react'
 
@@ -176,8 +173,9 @@ export default function AdminDashboard() {
                       <TableHead>Role</TableHead>
                       <TableHead>Joined</TableHead>
                       <TableHead>Actions</TableHead>
-                    </TableHead>
-                    <TableBody>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
                       {users.map((user) => (
                         <TableRow key={user.id}>
                           <TableCell>{user.name}</TableCell>
