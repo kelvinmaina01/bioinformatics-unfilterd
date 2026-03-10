@@ -1,130 +1,67 @@
 import { createClient } from '@supabase/supabase-js'
 
-// Supabase configuration - check multiple possible env variable names
-// Try VITE_ prefix first (for Vite), then NEXT_PUBLIC_ as fallback
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || import.meta.env.NEXT_PUBLIC_SUPABASE_URL || 'https://iyzhynkktthtijvcddin.supabase.co'
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+// Supabase configuration
+// These MUST be set in your environment variables
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-// Debug logging to see what's being loaded
-console.log('🔍 Supabase Configuration Debug:')
+// Debug logging
+console.log('🔍 Supabase Configuration:')
 console.log('Environment:', import.meta.env.MODE)
-console.log('VITE_SUPABASE_URL:', import.meta.env.VITE_SUPABASE_URL)
-console.log('NEXT_PUBLIC_SUPABASE_URL:', import.meta.env.NEXT_PUBLIC_SUPABASE_URL)
-console.log('Using supabaseUrl:', supabaseUrl)
-console.log('VITE_SUPABASE_ANON_KEY:', import.meta.env.VITE_SUPABASE_ANON_KEY ? '***' + import.meta.env.VITE_SUPABASE_ANON_KEY.slice(-4) : 'undefined')
-console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY:', import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? '***' + import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.slice(-4) : 'undefined')
-console.log('Using supabaseAnonKey present?:', !!supabaseAnonKey)
-console.log('Key type:', supabaseAnonKey ? (supabaseAnonKey.startsWith('sb_publishable_') ? 'publishable' : supabaseAnonKey.startsWith('eyJ') ? 'JWT' : 'unknown') : 'none')
+console.log('VITE_SUPABASE_URL:', supabaseUrl ? '***' + supabaseUrl.slice(-20) : 'NOT SET')
+console.log('VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? '***' + supabaseAnonKey.slice(-4) : 'NOT SET')
 
-// Create supabase client based on configuration
+// Validate environment variables
+if (!supabaseUrl || !supabaseAnonKey) {
+  const errorMessage = `
+❌ SUPABASE CONFIGURATION ERROR
+
+Missing required environment variables:
+${!supabaseUrl ? '• VITE_SUPABASE_URL is not set' : ''}
+${!supabaseAnonKey ? '• VITE_SUPABASE_ANON_KEY is not set' : ''}
+
+To fix this:
+1. Go to your Vercel project → Settings → Environment Variables
+2. Add these variables:
+   - VITE_SUPABASE_URL=https://iyzhynkktthtijvcddin.supabase.co
+   - VITE_SUPABASE_ANON_KEY=your_publishable_key_here
+
+3. Get your publishable key from Supabase:
+   - Go to https://supabase.com/dashboard/project/iyzhynkktthtijvcddin
+   - Go to Settings > API
+   - Copy the "anon" public key (publishable key)
+
+4. Redeploy your application in Vercel
+`
+  console.error(errorMessage)
+  throw new Error('Supabase configuration missing. Check console for details.')
+}
+
+// Create the Supabase client
 let supabaseClient
-
-// Validate that we have the required environment variables
-if (!supabaseAnonKey || supabaseAnonKey === 'your-anon-key-here' || supabaseAnonKey.includes('your-anon-key')) {
-  console.error(
-    '❌ Supabase anon key is missing or not configured!',
-    '\nPlease set VITE_SUPABASE_ANON_KEY in your environment variables.',
-    '\n\nTo get your anon key:',
-    '\n1. Go to https://supabase.com/dashboard/project/iyzhynkktthtijvcddin',
-    '\n2. Go to Settings > API',
-    '\n3. Copy the "anon" public key (JWT format) OR the publishable key',
-    '\n4. Add it to Vercel as VITE_SUPABASE_ANON_KEY=your_actual_key_here'
-  )
-  
-  // Create a mock client that will throw helpful errors
-  // This prevents the app from crashing during development
-  supabaseClient = {
+try {
+  supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
-      signIn: () => Promise.reject(new Error('Supabase not configured. Please set VITE_SUPABASE_ANON_KEY in environment variables')),
-      signOut: () => Promise.reject(new Error('Supabase not configured. Please set VITE_SUPABASE_ANON_KEY in environment variables')),
-      getSession: () => Promise.reject(new Error('Supabase not configured. Please set VITE_SUPABASE_ANON_KEY in environment variables')),
-      onAuthStateChange: (callback: any) => {
-        console.error('Supabase not configured. onAuthStateChange called but Supabase is not initialized.')
-        return {
-          data: { subscription: { unsubscribe: () => {} } },
-          unsubscribe: () => {}
-        }
-      },
-      getUser: () => Promise.reject(new Error('Supabase not configured. Please set VITE_SUPABASE_ANON_KEY in environment variables')),
-      signUp: () => Promise.reject(new Error('Supabase not configured. Please set VITE_SUPABASE_ANON_KEY in environment variables')),
-    },
-    from: (table: string) => ({
-      select: () => Promise.reject(new Error(`Supabase not configured. Cannot select from ${table}`)),
-      insert: () => Promise.reject(new Error(`Supabase not configured. Cannot insert into ${table}`)),
-      update: () => Promise.reject(new Error(`Supabase not configured. Cannot update ${table}`)),
-      delete: () => Promise.reject(new Error(`Supabase not configured. Cannot delete from ${table}`)),
-      upsert: () => Promise.reject(new Error(`Supabase not configured. Cannot upsert into ${table}`)),
-      eq: () => ({
-        select: () => Promise.reject(new Error(`Supabase not configured. Cannot select from ${table}`)),
-        single: () => Promise.reject(new Error(`Supabase not configured. Cannot get single from ${table}`)),
-      }),
-      single: () => Promise.reject(new Error(`Supabase not configured. Cannot get single from ${table}`)),
-    }),
-    channel: () => ({
-      on: () => ({ subscribe: () => {} }),
-      subscribe: () => {},
-    }),
-  } as any
-} else {
-  try {
-    // Create the actual Supabase client
-    supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        autoRefreshToken: true,
-        persistSession: true,
-        detectSessionInUrl: true
-      }
-    })
-    
-    console.log('✅ Supabase client initialized successfully')
-    console.log('Key type:', supabaseAnonKey.startsWith('sb_publishable_') ? 'publishable key' : 'JWT key')
-    
-    // Test the connection
-    supabaseClient.auth.getSession().then(({ data, error }) => {
-      if (error) {
-        console.error('❌ Supabase connection test failed:', error.message)
-      } else {
-        console.log('✅ Supabase connection test successful')
-      }
-    })
-  } catch (error) {
-    console.error('❌ Failed to create Supabase client:', error)
-    console.error('This might be a key format issue or network issue.')
-    
-    // Fallback to mock client
-    supabaseClient = {
-      auth: {
-        signIn: () => Promise.reject(new Error(`Supabase client creation failed: ${error}`)),
-        signOut: () => Promise.reject(new Error(`Supabase client creation failed: ${error}`)),
-        getSession: () => Promise.reject(new Error(`Supabase client creation failed: ${error}`)),
-        onAuthStateChange: (callback: any) => {
-          console.error(`Supabase client creation failed: ${error}. onAuthStateChange called but Supabase is not initialized.`)
-          return {
-            data: { subscription: { unsubscribe: () => {} } },
-            unsubscribe: () => {}
-          }
-        },
-        getUser: () => Promise.reject(new Error(`Supabase client creation failed: ${error}`)),
-        signUp: () => Promise.reject(new Error(`Supabase client creation failed: ${error}`)),
-      },
-      from: (table: string) => ({
-        select: () => Promise.reject(new Error(`Supabase client creation failed: ${error}. Cannot select from ${table}`)),
-        insert: () => Promise.reject(new Error(`Supabase client creation failed: ${error}. Cannot insert into ${table}`)),
-        update: () => Promise.reject(new Error(`Supabase client creation failed: ${error}. Cannot update ${table}`)),
-        delete: () => Promise.reject(new Error(`Supabase client creation failed: ${error}. Cannot delete from ${table}`)),
-        upsert: () => Promise.reject(new Error(`Supabase client creation failed: ${error}. Cannot upsert into ${table}`)),
-        eq: () => ({
-          select: () => Promise.reject(new Error(`Supabase client creation failed: ${error}. Cannot select from ${table}`)),
-          single: () => Promise.reject(new Error(`Supabase client creation failed: ${error}. Cannot get single from ${table}`)),
-        }),
-        single: () => Promise.reject(new Error(`Supabase client creation failed: ${error}. Cannot get single from ${table}`)),
-      }),
-      channel: () => ({
-        on: () => ({ subscribe: () => {} }),
-        subscribe: () => {},
-      }),
-    } as any
-  }
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true
+    }
+  })
+  
+  console.log('✅ Supabase client initialized successfully')
+  console.log('Key type:', supabaseAnonKey.startsWith('sb_publishable_') ? 'publishable key' : 'JWT key')
+  
+  // Test connection
+  supabaseClient.auth.getSession().then(({ data, error }) => {
+    if (error) {
+      console.warn('⚠️ Supabase connection test warning:', error.message)
+    } else {
+      console.log('✅ Supabase connection test successful')
+    }
+  })
+} catch (error) {
+  console.error('❌ Failed to create Supabase client:', error)
+  throw new Error(`Failed to initialize Supabase: ${error}`)
 }
 
 // Export the supabase client
