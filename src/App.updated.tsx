@@ -28,6 +28,7 @@ import UsersList from "./pages/admin/UsersList";
 import TeamManager from "./pages/admin/TeamManager";
 import HonourCircle from "./pages/admin/HonourCircle";
 import { KelvinAIAssistant } from "./components/KelvinAIAssistant";
+import Cockpit from "./pages/admin/Cockpit";
 
 const queryClient = new QueryClient();
 
@@ -50,19 +51,20 @@ const App = () => (
               <Route path="/blogs" element={<Blogs />} />
               <Route path="/events/:id" element={<SingleEvent />} />
 
-              {/* Admin Dashboard Routes */}
+              {/* Admin Dashboard Routes (Cockpit) */}
               <Route path="/admin" element={
                 <AdminRoute>
                   <AdminDashboardLayout />
                 </AdminRoute>
               }>
-                <Route index element={<AdminOverview />} />
+                <Route index element={<Cockpit />} />
                 <Route path="community" element={<UsersList />} />
                 <Route path="events" element={<EventController />} />
                 <Route path="blogs" element={<BlogController />} />
                 <Route path="donations" element={<AdminDonations />} />
                 <Route path="team" element={<TeamManager />} />
                 <Route path="honour-circle" element={<HonourCircle />} />
+                <Route path="cockpit" element={<Cockpit />} />
                 <Route path="settings" element={<div>Settings (Coming Soon)</div>} />
               </Route>
 

@@ -3,20 +3,18 @@ import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from '@/hooks/use-toast';
-import { db } from '@/lib/firebase';
-import { addDoc, collection } from 'firebase/firestore';
+import { supabase } from '@/lib/supabase';
 
 interface EventFormData {
     title: string;
-    type: 'Webinar' | 'Workshop' | 'Conference' | 'Hackathon';
+    type: 'Conference' | 'Workshop' | 'Meetup' | 'Hackathon' | 'Webinar';
     date: string;
     time: string;
     location: string;
     description: string;
     image: string;
-    registrationLink: string;
+    rsvp_link: string;
 }
 
 export default function EventController() {
@@ -27,11 +25,17 @@ export default function EventController() {
     const onSubmit = async (data: EventFormData) => {
         setLoading(true);
         try {
-            await addDoc(collection(db, 'events'), {
-                ...data,
-                status: 'upcoming', // Default to upcoming
-                attendees: 0
-            });
+            const { error } = await supabase
+                .from('events')
+                .insert([{
+                    ...data,
+                    status: 'upcoming',
+                    attendees: 0,
+                    long_description: data.description
+                }]);
+
+            if (error) throw error;
+            
             toast({ title: 'Success', description: 'Event created successfully!' });
             reset();
         } catch (error: any) {

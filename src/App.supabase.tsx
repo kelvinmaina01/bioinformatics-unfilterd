@@ -10,8 +10,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SupabaseAuthProvider } from "@/contexts/SupabaseAuthContext";
-import { ScrollToTop } from "./components/ScrollToTop";
-import { SupabaseDatabaseSeeder } from "./components/SupabaseDatabaseSeeder";
+import { ScrollToTop } from "@/components/ScrollToTop";
+import { SupabaseDatabaseSeeder } from "./components/SupabaseDatabaseSeeder"; // Dev tool
 import { CompleteProfileModal } from "./components/CompleteProfileModal";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -27,14 +27,14 @@ import NotFound from "./pages/NotFound";
 import UsersList from "./pages/admin/UsersList";
 import TeamManager from "./pages/admin/TeamManager";
 import HonourCircle from "./pages/admin/HonourCircle";
-import { KelvinAIAssistant } from "./components/KelvinAIAssistant";
+import { ChatBot } from "./components/ChatBot";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme"> {/* Default theme set to dark */}
         <SupabaseAuthProvider>
           <SupabaseDatabaseSeeder />
           <BrowserRouter>
@@ -50,7 +50,7 @@ const App = () => (
               <Route path="/blogs" element={<Blogs />} />
               <Route path="/events/:id" element={<SingleEvent />} />
 
-              {/* Admin Dashboard Routes */}
+              {/* Admin Dashboard Routes (Cockpit) */}
               <Route path="/admin" element={
                 <AdminRoute>
                   <AdminDashboardLayout />
@@ -69,7 +69,7 @@ const App = () => (
               {/* 404 Route */}
               <Route path="*" element={<NotFound />} />
             </Routes>
-            <KelvinAIAssistant />
+            <ChatBot />
           </BrowserRouter>
           <Toaster />
           <CompleteProfileModal />
