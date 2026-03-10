@@ -38,12 +38,31 @@ if (!supabaseAnonKey || supabaseAnonKey === 'your-anon-key-here' || supabaseAnon
       signIn: () => Promise.reject(new Error('Supabase not configured. Please set VITE_SUPABASE_ANON_KEY in environment variables')),
       signOut: () => Promise.reject(new Error('Supabase not configured. Please set VITE_SUPABASE_ANON_KEY in environment variables')),
       getSession: () => Promise.reject(new Error('Supabase not configured. Please set VITE_SUPABASE_ANON_KEY in environment variables')),
+      onAuthStateChange: (callback: any) => {
+        console.error('Supabase not configured. onAuthStateChange called but Supabase is not initialized.')
+        return {
+          data: { subscription: { unsubscribe: () => {} } },
+          unsubscribe: () => {}
+        }
+      },
+      getUser: () => Promise.reject(new Error('Supabase not configured. Please set VITE_SUPABASE_ANON_KEY in environment variables')),
+      signUp: () => Promise.reject(new Error('Supabase not configured. Please set VITE_SUPABASE_ANON_KEY in environment variables')),
     },
-    from: () => ({
-      select: () => Promise.reject(new Error('Supabase not configured. Please set VITE_SUPABASE_ANON_KEY in environment variables')),
-      insert: () => Promise.reject(new Error('Supabase not configured. Please set VITE_SUPABASE_ANON_KEY in environment variables')),
-      update: () => Promise.reject(new Error('Supabase not configured. Please set VITE_SUPABASE_ANON_KEY in environment variables')),
-      delete: () => Promise.reject(new Error('Supabase not configured. Please set VITE_SUPABASE_ANON_KEY in environment variables')),
+    from: (table: string) => ({
+      select: () => Promise.reject(new Error(`Supabase not configured. Cannot select from ${table}`)),
+      insert: () => Promise.reject(new Error(`Supabase not configured. Cannot insert into ${table}`)),
+      update: () => Promise.reject(new Error(`Supabase not configured. Cannot update ${table}`)),
+      delete: () => Promise.reject(new Error(`Supabase not configured. Cannot delete from ${table}`)),
+      upsert: () => Promise.reject(new Error(`Supabase not configured. Cannot upsert into ${table}`)),
+      eq: () => ({
+        select: () => Promise.reject(new Error(`Supabase not configured. Cannot select from ${table}`)),
+        single: () => Promise.reject(new Error(`Supabase not configured. Cannot get single from ${table}`)),
+      }),
+      single: () => Promise.reject(new Error(`Supabase not configured. Cannot get single from ${table}`)),
+    }),
+    channel: () => ({
+      on: () => ({ subscribe: () => {} }),
+      subscribe: () => {},
     }),
   } as any
 } else {
@@ -78,12 +97,31 @@ if (!supabaseAnonKey || supabaseAnonKey === 'your-anon-key-here' || supabaseAnon
         signIn: () => Promise.reject(new Error(`Supabase client creation failed: ${error}`)),
         signOut: () => Promise.reject(new Error(`Supabase client creation failed: ${error}`)),
         getSession: () => Promise.reject(new Error(`Supabase client creation failed: ${error}`)),
+        onAuthStateChange: (callback: any) => {
+          console.error(`Supabase client creation failed: ${error}. onAuthStateChange called but Supabase is not initialized.`)
+          return {
+            data: { subscription: { unsubscribe: () => {} } },
+            unsubscribe: () => {}
+          }
+        },
+        getUser: () => Promise.reject(new Error(`Supabase client creation failed: ${error}`)),
+        signUp: () => Promise.reject(new Error(`Supabase client creation failed: ${error}`)),
       },
-      from: () => ({
-        select: () => Promise.reject(new Error(`Supabase client creation failed: ${error}`)),
-        insert: () => Promise.reject(new Error(`Supabase client creation failed: ${error}`)),
-        update: () => Promise.reject(new Error(`Supabase client creation failed: ${error}`)),
-        delete: () => Promise.reject(new Error(`Supabase client creation failed: ${error}`)),
+      from: (table: string) => ({
+        select: () => Promise.reject(new Error(`Supabase client creation failed: ${error}. Cannot select from ${table}`)),
+        insert: () => Promise.reject(new Error(`Supabase client creation failed: ${error}. Cannot insert into ${table}`)),
+        update: () => Promise.reject(new Error(`Supabase client creation failed: ${error}. Cannot update ${table}`)),
+        delete: () => Promise.reject(new Error(`Supabase client creation failed: ${error}. Cannot delete from ${table}`)),
+        upsert: () => Promise.reject(new Error(`Supabase client creation failed: ${error}. Cannot upsert into ${table}`)),
+        eq: () => ({
+          select: () => Promise.reject(new Error(`Supabase client creation failed: ${error}. Cannot select from ${table}`)),
+          single: () => Promise.reject(new Error(`Supabase client creation failed: ${error}. Cannot get single from ${table}`)),
+        }),
+        single: () => Promise.reject(new Error(`Supabase client creation failed: ${error}. Cannot get single from ${table}`)),
+      }),
+      channel: () => ({
+        on: () => ({ subscribe: () => {} }),
+        subscribe: () => {},
       }),
     } as any
   }
